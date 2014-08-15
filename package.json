@@ -1,0 +1,33 @@
+{
+  "name": "sails-bunyan",
+  "version": "0.0.0",
+  "description": "Bunyan integration for sails.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/building5/sails-bunyan.git"
+  },
+  "keywords": [
+    "sails",
+    "bunyan",
+    "logging"
+  ],
+  "author": "David M. Lee, II",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/building5/sails-bunyan/issues"
+  },
+  "homepage": "https://github.com/building5/sails-bunyan",
+  "dependencies": {
+    "bunyan": "^1.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^1.21.4"
+  },
+  "peerDependencies": {
+    "sails": "^0.10.4"
+  }
+}
