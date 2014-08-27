@@ -16,7 +16,7 @@
     "logging"
   ],
   "author": "David M. Lee, II",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/building5/sails-bunyan/issues"
   },
