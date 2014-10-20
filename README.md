@@ -34,14 +34,14 @@ child logger onto every request. This is configured in your app's
 `config/http.js`.
 
 ```JavaScript
-var requestLogger = require('sails-bunyan').requestLogger;
+var injectRequestLogger = require('sails-bunyan').injectRequestLogger;
 
 module.exports.http = {
   order: [
-    'requestLogger',
+    'injectRequestLogger',
     // Other middleware
   ],
 
-  requestLogger: requestLogger
+  injectRequestLogger: injectRequestLogger
 };
 ```
