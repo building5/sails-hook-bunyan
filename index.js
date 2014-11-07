@@ -51,6 +51,7 @@ module.exports.injectBunyan = function (sails) {
   bunyanConfig.serializers = bunyanConfig.serializers || bunyan.stdSerializers;
   // default log level to debug
   bunyanConfig.level = bunyanConfig.level || toBunyanLevel(logConfig.level) || 'debug';
+
   // Create a fileStream if filePath is set
   if (logConfig.filePath) {
     bunyanConfig.streams = bunyanConfig.streams || [];
@@ -70,6 +71,14 @@ module.exports.injectBunyan = function (sails) {
   if (logConfig.rotationSignal) {
     process.on(logConfig.rotationSignal, function () {
       logger.reopenFileStreams();
+    })
+  }
+
+  // If logUncaughtException is set, log those, too
+  if (logConfig.logUncaughtException) {
+    process.on('uncaughtException', function (err) {
+      logger.fatal({ err: err }, 'Uncaught exception');
+      process.exit(1);
     })
   }
 

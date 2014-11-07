@@ -20,7 +20,7 @@ module.exports.log = {
   /** Sails logging level, for backward comparability */
   level: 'info',
   /** If true, log uncaughtExceptions and terminate the process */
-  logUncaughtException: true,
+  logUncaughtException: false,
   /** If given, file to log to instead of stdout */
   filePath: null,
   /** If given, signal to listen on for file rotation */
