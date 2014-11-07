@@ -51,6 +51,13 @@ module.exports.injectBunyan = function (sails) {
   bunyanConfig.serializers = bunyanConfig.serializers || bunyan.stdSerializers;
   // default log level to debug
   bunyanConfig.level = bunyanConfig.level || toBunyanLevel(logConfig.level) || 'debug';
+  // Create a fileStream if filePath is set
+  if (logConfig.filePath) {
+    bunyanConfig.streams = bunyanConfig.streams || [];
+    bunyanConfig.streams.push({
+      path: logConfig.filePath
+    });
+  }
 
   // If log level is silent, remove the log streams
   if (logConfig.level === 'silent') {
