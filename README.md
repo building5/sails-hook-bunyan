@@ -13,19 +13,35 @@ module.exports.bootstrap = function (done) {
 }
 ```
 
-To configure Bunyan, put a `bunyan` object in `config/log.js`.
+To configure Bunyan, put a `bunyan` object in `config/log.js`. The defaults are
 
 ```JavaScript
 module.exports.log = {
-  level: 'info', // Sails logging level, for backward compatability
+  /** Sails logging level, for backward comparability */
+  level: 'info',
+  /** If true, log uncaughtExceptions and terminate the process */
+  logUncaughtException: true,
+  /** If given, file to log to instead of stdout */
+  filePath: null,
+  /** If given, signal to listen on for file rotation */
+  rotationSignal: null,
+  /** Configuration to pass to the Bunyan logger */
   bunyan: {
-    name: 'sails', // Logger name
-    level: 'debug', // Bunyan logging level
-    serializers: bunyan.stdSerializers, // Bunyan serializers
-    streams: [] // Output streams. Defaults to stdout.
+    /** Logger name */
+    name: 'sails',
+    /** Bunyan logging level */
+    level: 'debug',
+    /** Bunyan serializers */
+    serializers: bunyan.stdSerializers,
+    /** Array of output streams */
+    streams: null
   }
 };
 ```
+
+By default, `sails-bunyan` will log to `stdout`. If a `filePath` is specified,
+it will instead log to the named file. If both `filePath` and `bunyan.streams`
+are specified, the file stream is appended to the list of given streams.
 
 ## Request Logger
 

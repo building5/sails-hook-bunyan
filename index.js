@@ -99,10 +99,8 @@ module.exports.injectBunyan = function (sails) {
 };
 
 module.exports.injectRequestLogger = function (req, res, next) {
-  var logger;
-
   if (!global.sails) {
-    console.error('Sails middleware has not been injected yet');
+    console.error('Sails has not been lifted yet');
     return next();
   }
 
