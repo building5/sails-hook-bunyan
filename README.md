@@ -43,6 +43,10 @@ By default, `sails-bunyan` will log to `stdout`. If a `filePath` is specified,
 it will instead log to the named file. If both `filePath` and `bunyan.streams`
 are specified, the file stream is appended to the list of given streams.
 
+For `rotationSignal`, it's recommended to use `SIGHUP`. `SIGUSR1` is reserved
+by Node, and will start the debugger. `SIGUSR2` is reserved by Sails, and will
+lower the sails app.
+
 ## Request Logger
 
 `sails-bunyan` also provides a middleware function that can inject a Bunyan
