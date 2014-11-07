@@ -45,7 +45,9 @@ are specified, the file stream is appended to the list of given streams.
 
 For `rotationSignal`, it's recommended to use `SIGHUP`. `SIGUSR1` is reserved
 by Node, and will start the debugger. `SIGUSR2` is reserved by Sails, and will
-lower the sails app.
+lower the sails app. Upon receiving the signal, `sails-bunyan` will call
+`bunyan.reopenFileStreams()`; allowing for something like [logrotate][] to
+handle the actual file rotation logic.
 
 ## Request Logger
 
@@ -65,3 +67,5 @@ module.exports.http = {
   injectRequestLogger: injectRequestLogger
 };
 ```
+
+ [logrotate]: http://linux.die.net/man/8/logrotate
