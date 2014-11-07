@@ -66,6 +66,13 @@ module.exports.injectBunyan = function (sails) {
 
   var logger = bunyan.createLogger(bunyanConfig);
 
+  // If a rotationSignal is given, listen for it
+  if (logConfig.rotationSignal) {
+    process.on(logConfig.rotationSignal, function () {
+      logger.reopenFileStreams();
+    })
+  }
+
   // the main log must be callable, default to debug level
   var log = sails.log = logger.debug.bind(logger);
 
