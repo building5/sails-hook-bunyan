@@ -56,6 +56,7 @@ module.exports.injectBunyan = function (sails) {
   if (logConfig.filePath) {
     bunyanConfig.streams = bunyanConfig.streams || [];
     bunyanConfig.streams.push({
+      level: bunyanConfig.level,
       path: logConfig.filePath
     });
   }

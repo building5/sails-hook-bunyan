@@ -2,7 +2,10 @@
 
 ## v.next (20XX-XX-XX)
 
+## v1.0.1 (2015-01-06)
+
  * Doc updates
+ * Fix level setting when using `config.filePath`.
 
 ## v1.0.0 (2014-11-06)
 
