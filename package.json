@@ -1,6 +1,6 @@
 {
   "name": "sails-bunyan",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bunyan integration for sails.js",
   "main": "index.js",
   "scripts": {
