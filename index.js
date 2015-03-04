@@ -15,6 +15,7 @@ var logLevels = {
   crit: 'fatal',
   blank: 'info' // No idea what this is, but it's on sails.log at level info
 };
+module.exports.logLevels = logLevels;
 
 /**
  * Converts a Sails.js log level to a Bunyan log level. Really, it's just
