@@ -1,6 +1,9 @@
 # sails-bunyan changelog
 
-## v.next (20XX-XX-XX)
+## v1.0.2 (2015-03-04)
+
+ * PR#3 export logLevels, so sails-bunyan extensions can make their
+   own mappings
 
 ## v1.0.1 (2015-01-06)
 
