@@ -1,14 +1,17 @@
 {
-  "name": "sails-bunyan",
+  "name": "sails-hook-bunyan",
   "version": "1.0.2",
   "description": "Bunyan integration for sails.js",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "style": "jscs .",
+    "lint": "jshint .",
+    "unit": "mocha",
+    "test": "npm run unit && npm run lint && npm run style"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/building5/sails-bunyan.git"
+    "url": "https://github.com/building5/sails-hook-bunyan.git"
   },
   "keywords": [
     "sails",
@@ -18,16 +21,26 @@
   "author": "David M. Lee, II",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/building5/sails-bunyan/issues"
+    "url": "https://github.com/building5/sails-hook-bunyan/issues"
   },
-  "homepage": "https://github.com/building5/sails-bunyan",
+  "homepage": "https://github.com/building5/sails-hook-bunyan",
   "dependencies": {
     "bunyan": "^1.0.0"
   },
   "devDependencies": {
-    "mocha": "^1.21.4"
+    "chai": "^2.3.0",
+    "dirty-chai": "^1.2.1",
+    "jscs": "^1.13.1",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "sails": "^0.11.0",
+    "sinon": "^1.14.1",
+    "sinon-chai": "^2.7.0"
   },
   "peerDependencies": {
-    "sails": "^0.10.4"
+    "sails": "^0.11.0"
+  },
+  "sails": {
+    "isHook": true
   }
 }

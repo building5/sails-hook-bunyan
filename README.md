@@ -1,36 +1,42 @@
-# sails-bunyan
+# sails-hook-bunyan
 
-A module replacing the Sails default logger with Bunyan. Support sails 0.10.x.
+A [sails hook][] replacing the Sails default logger with Bunyan. Supports sails
+0.11.x.
 
-To use, simply inject the logger in `config/bootstrap.js`.
+> For Sails 0.10.x support, see the old [sails-bunyan][].
 
-```JavaScript
-var injectBunyan = require('sails-bunyan').injectBunyan;
+## Installation
 
-module.exports.bootstrap = function (done) {
-  injectBunyan();
-  done();
-}
+To use, simply install the module.
+
+```
+$ npm install sails-hook-bunyan
 ```
 
-To configure Bunyan, put a `bunyan` object in `config/log.js`. The defaults are
+## Configuration
+
+By default, `sails-hook-bunyan` is configured in the `bunyan` config object,
+however, this can be changed in your [hook configuration][].
 
 ```JavaScript
-module.exports.log = {
-  /** Sails logging level, for backward comparability */
-  level: 'info',
+module.exports.bunyan = {
+  /** If true, a child logger is injected on each request */
+  injectRequestLogger: true,
+
   /** If true, log uncaughtExceptions and terminate the process */
   logUncaughtException: false,
-  /** If given, file to log to instead of stdout */
-  filePath: null,
+
   /** If given, signal to listen on for file rotation */
   rotationSignal: null,
-  /** Configuration to pass to the Bunyan logger */
+
+  /** Convenience setting to log to file */
+  filePath: null,
+
   bunyan: {
     /** Logger name */
     name: 'sails',
-    /** Bunyan logging level */
-    level: 'debug',
+    /** Bunyan logging level; defaults to debug */
+    level: null,
     /** Bunyan serializers */
     serializers: bunyan.stdSerializers,
     /** Array of output streams */
@@ -39,33 +45,18 @@ module.exports.log = {
 };
 ```
 
-By default, `sails-bunyan` will log to `stdout`. If a `filePath` is specified,
-it will instead log to the named file. If both `filePath` and `bunyan.streams`
-are specified, the file stream is appended to the list of given streams.
+By default, `sails-hook-bunyan` will log to `stdout`. If a `filePath` is
+specified, it will instead log to the named file. If both `filePath` and
+`bunyan.streams` are specified, the file stream is appended to the list of given
+streams.
 
 For `rotationSignal`, it's recommended to use `SIGHUP`. `SIGUSR1` is reserved
 by Node, and will start the debugger. `SIGUSR2` is reserved by Sails, and will
-lower the sails app. Upon receiving the signal, `sails-bunyan` will call
+lower the sails app. Upon receiving the signal, `sails-hook-bunyan` will call
 `bunyan.reopenFileStreams()`; allowing for something like [logrotate][] to
 handle the actual file rotation logic.
 
-## Request Logger
-
-`sails-bunyan` also provides a middleware function that can inject a Bunyan
-child logger onto every request. This is configured in your app's
-`config/http.js`.
-
-```JavaScript
-var injectRequestLogger = require('sails-bunyan').injectRequestLogger;
-
-module.exports.http = {
-  order: [
-    'injectRequestLogger',
-    // Other middleware
-  ],
-
-  injectRequestLogger: injectRequestLogger
-};
-```
-
+ [sails hook]: http://sailsjs.org/#!/documentation/concepts/extending-sails/Hooks
+ [sails-bunyan]: https://github.com/building5/sails-bunyan
+ [hook configuration]: http://sailsjs.org/#!/documentation/concepts/extending-sails/Hooks/usinghooks.html?q=changing-the-way-sails-loads-an-installable-hook
  [logrotate]: http://linux.die.net/man/8/logrotate
