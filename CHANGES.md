@@ -1,6 +1,6 @@
 # sails-hook-bunyan changelog
 
-## v2.0.0 (2015-05-31)
+## v2.0.0 (2015-06-02)
 
  * Updated for Sails 0.11.x.
    * Re-implemented as a Sails hook.
