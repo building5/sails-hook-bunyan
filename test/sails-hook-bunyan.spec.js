@@ -108,7 +108,7 @@ describe('sails-hook-bunyan', function() {
         .to.have.been.called();
       expect(fakeLogger.debug.firstCall)
         .to.have.been.calledWithExactly('some other message');
-    })
+    });
   });
 
   describe('with routes configured', function() {
