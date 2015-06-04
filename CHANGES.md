@@ -1,11 +1,16 @@
 # sails-hook-bunyan changelog
 
+## v2.1.0 (2015-06-02)
+
+ * Added `getLogger` extension point, so other hooks can provide their own
+   logger.
+
 ## v2.0.0 (2015-06-02)
 
  * Updated for Sails 0.11.x.
    * Re-implemented as a Sails hook.
  * Changed name to `sails-hook-bunyan`.
- 
+
 ## v1.0.2 (2015-03-04)
 
  * PR#3 export logLevels, so sails-hook-bunyan extensions can make their

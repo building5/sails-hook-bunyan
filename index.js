@@ -23,10 +23,11 @@ module.exports.logLevels = logLevels;
  */
 module.exports = function(sails) {
   var injectRequestLogger;
-  var logger;
+  var _this;
 
   return {
     defaults: function() {
+      var _this = this;
       var fileStream;
       var config = {};
       var oldConfig = sails.config.log;
@@ -39,6 +40,11 @@ module.exports = function(sails) {
 
         /** If given, signal to listen on for file rotation */
         rotationSignal: null,
+
+        /** Extension point for returning custom loggers */
+        getLogger: function() {
+          return _this.logger;
+        },
 
         /** Default configuration for bunyan logger */
         logger: {
@@ -84,7 +90,6 @@ module.exports = function(sails) {
      * Hook configuration function.
      */
     configure: function() {
-      var _this = this;
       var config = sails.config[this.configKey];
 
       // the ship drawing looks pretty silly in JSON
@@ -98,7 +103,7 @@ module.exports = function(sails) {
       config.logger.serializers =
         config.logger.serializers || bunyan.stdSerializers;
 
-      logger = this.logger = bunyan.createLogger(config.logger);
+      this.logger = bunyan.createLogger(config.logger);
 
       // Inject custom log config
       sails.config.log.custom = {};
@@ -106,8 +111,10 @@ module.exports = function(sails) {
       Object.keys(logLevels).forEach(function(sailsLevel) {
         var bunyanLevel = logLevels[sailsLevel];
         if (bunyanLevel) {
-          sails.config.log.custom[sailsLevel] =
-            _this.logger[bunyanLevel].bind(_this.logger);
+          sails.config.log.custom[sailsLevel] = function() {
+            var logger = config.getLogger();
+            logger[bunyanLevel].apply(logger, arguments);
+          };
         }
       });
     },
@@ -116,8 +123,9 @@ module.exports = function(sails) {
      * Hook initialization function.
      */
     initialize: function(done) {
-      var _this = this;
       var config = sails.config[this.configKey];
+
+      _this = this;
 
       // If a rotationSignal is given, listen for it
       if (config.rotationSignal) {
@@ -147,7 +155,7 @@ module.exports = function(sails) {
       before: {
         '/*': function(req, res, next) {
           if (injectRequestLogger) {
-            req.log = logger.child({req: req}, true);
+            req.log = _this.logger.child({req: req}, true);
           }
 
           next();

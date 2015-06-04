@@ -28,17 +28,8 @@ describe('sails-hook-bunyan', function() {
     });
   }
 
-  before(function() {
-    // Lifting sails listens to a bunch of stuff
-    process.setMaxListeners(0);
-  });
-
-  beforeEach(function() {
-    sinon = require('sinon').sandbox.create();
-  });
-
-  beforeEach(function() {
-    fakeLogger = {
+  function buildFakeLogger() {
+    return {
       reopenFileStreams: sinon.stub(),
       child: sinon.stub(),
 
@@ -49,6 +40,19 @@ describe('sails-hook-bunyan', function() {
       error: sinon.stub(),
       fatal: sinon.stub()
     };
+  }
+
+  before(function() {
+    // Lifting sails listens to a bunch of stuff
+    process.setMaxListeners(0);
+  });
+
+  beforeEach(function() {
+    sinon = require('sinon').sandbox.create();
+  });
+
+  beforeEach(function() {
+    fakeLogger = buildFakeLogger();
   });
 
   beforeEach(function() {
@@ -322,6 +326,29 @@ describe('sails-hook-bunyan', function() {
         done();
       });
     });
+  });
+
+  describe('with custom getLogger', function() {
+    var customFakeLogger;
+    beforeEach(function(done) {
+      customFakeLogger = buildFakeLogger();
+      liftSails({
+        bunyan: {
+          getLogger: function() {
+            return customFakeLogger;
+          }
+        }
+      }, done);
+    });
+
+    it('should use the custom logger', function() {
+      sails.log.debug('some message');
+      expect(customFakeLogger.debug)
+        .to.have.been.called();
+      expect(customFakeLogger.debug.firstCall)
+        .to.have.been.calledWithExactly('some message');
+    });
+
   });
 
   describe('with old sails.log config', function() {
