@@ -1,7 +1,8 @@
 // Copyright (c) 2015. David M. Lee, II
 'use strict';
 
-var bunyan = require('bunyan');
+var bunyan = require( 'bunyan' ),
+    uuid = require( 'uuid' );
 
 /**
  * Mapping of Sails log levels to Bunyan.
@@ -23,6 +24,7 @@ module.exports.logLevels = logLevels;
  */
 module.exports = function(sails) {
   var injectRequestLogger;
+  var generateRequestId;
   var _this;
 
   return {
@@ -34,6 +36,9 @@ module.exports = function(sails) {
       var bunyanConfig = {
         /** If true, a child logger is injected on each request */
         injectRequestLogger: true,
+
+        /** If true and injectRequestLogger is enabled, then generate and attach a unique req_id to each request logger */
+        generateRequestId: true,
 
         /** If true, log uncaughtExceptions and terminate the process */
         logUncaughtException: false,
@@ -142,8 +147,9 @@ module.exports = function(sails) {
         });
       }
 
-      // save off injectRequestLogger for middleware route
+      // save off injectRequestLogger and generateRequestId for middleware route
       injectRequestLogger = sails.config[this.configKey].injectRequestLogger;
+      generateRequestId = sails.config[this.configKey].generateRequestId;
 
       done();
     },
@@ -155,7 +161,14 @@ module.exports = function(sails) {
       before: {
         '/*': function(req, res, next) {
           if (injectRequestLogger) {
-            req.log = _this.logger.child({req: req}, false);
+
+            var options = {req: req};
+
+            if( generateRequestId ) {
+               options.req_id = uuid.v4();
+            }
+
+            req.log = _this.logger.child( options, false );
           }
 
           next();
