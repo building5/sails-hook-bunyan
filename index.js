@@ -155,7 +155,7 @@ module.exports = function(sails) {
       before: {
         '/*': function(req, res, next) {
           if (injectRequestLogger) {
-            req.log = _this.logger.child({req: req}, true);
+            req.log = _this.logger.child({req: req}, false);
           }
 
           next();
