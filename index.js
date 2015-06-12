@@ -104,7 +104,7 @@ module.exports = function(sails) {
         config.logger.serializers || bunyan.stdSerializers;
 
       this.reqSerializer = config.logger.serializers.req ||
-        function(x) { return x; }
+        function(x) { return x; };
 
       this.logger = bunyan.createLogger(config.logger);
 
@@ -158,7 +158,8 @@ module.exports = function(sails) {
       before: {
         '/*': function(req, res, next) {
           if (injectRequestLogger) {
-            req.log = _this.logger.child({req: _this.reqSerializer(req) }, true);
+            req = _this.reqSerializer(req);
+            req.log = _this.logger.child({req: req}, true);
           }
 
           next();
