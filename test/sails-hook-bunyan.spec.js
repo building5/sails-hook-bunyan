@@ -32,10 +32,10 @@ describe('sails-hook-bunyan', function() {
   function buildFakeLogger() {
     return {
       reopenFileStreams: sinon.stub(),
-      child: sinon.spy( function (options, simple) {
+      child: sinon.spy(function(options) {
 
         var newLogger = buildFakeLogger();
-        _.assign(newLogger.options, this.options, options || {} );
+        _.assign(newLogger.options, this.options, options || {});
         return newLogger;
       }),
 
