@@ -1,5 +1,9 @@
 # sails-hook-bunyan changelog
 
+## v2.1.1 (2015-06-12)
+
+ * #1 Run the request serializer when building the child logger.
+
 ## v2.1.0 (2015-06-02)
 
  * Added `getLogger` extension point, so other hooks can provide their own
