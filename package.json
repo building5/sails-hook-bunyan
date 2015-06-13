@@ -25,7 +25,8 @@
   },
   "homepage": "https://github.com/building5/sails-hook-bunyan",
   "dependencies": {
-    "bunyan": "^1.0.0"
+    "bunyan": "^1.0.0",
+    "uuid": "^2.0.1"
   },
   "devDependencies": {
     "chai": "^2.3.0",
