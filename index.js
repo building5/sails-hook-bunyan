@@ -54,7 +54,6 @@ module.exports = function(sails) {
          * Note: Only called if injectRequestLogger is true.
          */
         requestIdProvider: function(req) {
-
           if (!req.id) {
             req.id = uuid.v4();
           }

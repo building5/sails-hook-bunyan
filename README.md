@@ -23,8 +23,28 @@ module.exports.bunyan = {
   /** If true, a child logger is injected on each request */
   injectRequestLogger: true,
 
-  /** If true and injectRequestLogger is enabled, then generate and attach a unique req_id to each request logger */
-  generateRequestId: true,
+  /** Name of the request id property assigned to the request logger */
+  requestIdProperty: 'req_id',
+
+  /**
+   * Extension point for returning custom request ids
+   *
+   * Gets or generates a unique id for the request, and attaches it
+   * to the request logger's options. If no id is returned, then the
+   * request logger is unmodified.
+   *
+   * The default provider returns a new UUID v4 and attaches
+   * it to req.id
+   *
+   * Note: Only called if injectRequestLogger is true.
+   */
+  requestIdProvider: function(req) {
+    if (!req.id) {
+      req.id = uuid.v4();
+    }
+
+    return req.id;
+  },
 
   /** If true, log uncaughtExceptions and terminate the process */
   logUncaughtException: false,
