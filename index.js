@@ -37,8 +37,8 @@ module.exports = function(sails) {
         /** If true, a child logger is injected on each request */
         injectRequestLogger: true,
 
-        /** If true and injectRequestLogger is enabled, then generate
-            and attach a unique req_id to each request logger */
+        // If true and injectRequestLogger is enabled, then generate
+        // and attach a unique req_id to each request logger
         generateRequestId: true,
 
         /** If true, log uncaughtExceptions and terminate the process */
