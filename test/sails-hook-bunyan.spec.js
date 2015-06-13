@@ -189,6 +189,7 @@ describe('sails-hook-bunyan', function() {
     beforeEach(function(done) {
       controller = sinon.spy(function(req, res) {
         expect(req).to.have.property('log');
+        expect(req).to.have.property('req_id');
         expect(req.log.options).to.have.property('req_id');
         res.send(200, 'okay');
       });
@@ -224,6 +225,7 @@ describe('sails-hook-bunyan', function() {
     beforeEach(function(done) {
       controller = sinon.spy(function(req, res) {
         expect(req).to.have.property('log');
+        expect(req).to.not.have.property('req_id');
         expect(req.log.options).to.not.have.property('req_id');
         res.send(200, 'okay');
       });

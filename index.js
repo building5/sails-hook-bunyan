@@ -170,8 +170,11 @@ module.exports = function(sails) {
 
             if (generateRequestId) {
 
+              var requestId = uuid.v4();
+
               // jscs: disable
-              options.req_id = uuid.v4(); // jshint ignore:line
+              options.req_id = requestId; // jshint ignore:line
+              req.req_id = requestId; // jshint ignore:line
               // jscs: enable
             }
 
