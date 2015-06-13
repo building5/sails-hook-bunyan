@@ -109,6 +109,9 @@ module.exports = function(sails) {
       config.logger.serializers =
         config.logger.serializers || bunyan.stdSerializers;
 
+      this.reqSerializer = config.logger.serializers.req ||
+        function(x) { return x; };
+
       this.logger = bunyan.createLogger(config.logger);
 
       // Inject custom log config
@@ -163,7 +166,7 @@ module.exports = function(sails) {
         '/*': function(req, res, next) {
           if (injectRequestLogger) {
 
-            var options = {req: req};
+            var options = {req: _this.reqSerializer(req)};
 
             if (generateRequestId) {
 
@@ -172,7 +175,7 @@ module.exports = function(sails) {
               // jscs: enable
             }
 
-            req.log = _this.logger.child(options, false);
+            req.log = _this.logger.child(options, true);
           }
 
           next();
