@@ -24,7 +24,8 @@ module.exports.logLevels = logLevels;
  */
 module.exports = function(sails) {
   var injectRequestLogger;
-  var generateRequestId;
+  var requestIdProperty;
+  var requestIdProvider;
   var _this;
 
   return {
@@ -37,9 +38,29 @@ module.exports = function(sails) {
         /** If true, a child logger is injected on each request */
         injectRequestLogger: true,
 
-        // If true and injectRequestLogger is enabled, then generate
-        // and attach a unique req_id to each request logger
-        generateRequestId: true,
+        /** Name of the request id property assigned to the request logger */
+        requestIdProperty: 'req_id',
+
+        /**
+         * Extension point for returning custom request ids
+         *
+         * Gets or generates a unique id for the request, and attaches it
+         * to the request logger's options. If no id is returned, then the
+         * request logger is unmodified.
+         *
+         * The default provider returns a new UUID v4 and attaches
+         * it to req.id
+         *
+         * Note: Only called if injectRequestLogger is true.
+         */
+        requestIdProvider: function(req) {
+
+          if (!req.id) {
+            req.id = uuid.v4();
+          }
+
+          return req.id;
+        },
 
         /** If true, log uncaughtExceptions and terminate the process */
         logUncaughtException: false,
@@ -152,8 +173,11 @@ module.exports = function(sails) {
       }
 
       // save off injectRequestLogger and generateRequestId for middleware route
-      injectRequestLogger = sails.config[this.configKey].injectRequestLogger;
-      generateRequestId = sails.config[this.configKey].generateRequestId;
+      injectRequestLogger = config.injectRequestLogger;
+      requestIdProperty = config.requestIdProperty;
+
+      requestIdProvider = config.requestIdProvider ||
+          function() {return null;};
 
       done();
     },
@@ -168,14 +192,9 @@ module.exports = function(sails) {
 
             var options = {req: _this.reqSerializer(req)};
 
-            if (generateRequestId) {
-
-              var requestId = uuid.v4();
-
-              // jscs: disable
-              options.req_id = requestId; // jshint ignore:line
-              req.req_id = requestId; // jshint ignore:line
-              // jscs: enable
+            var requestId = requestIdProvider(req);
+            if (requestId !== null) {
+              options[requestIdProperty] = requestId;
             }
 
             req.log = _this.logger.child(options, true);
