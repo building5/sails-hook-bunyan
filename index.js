@@ -179,7 +179,8 @@ module.exports = function(sails) {
         });
       }
 
-      // save off injectRequestLogger and generateRequestId for middleware route
+      // save off injectRequestLogger, requestIdProperty, and requestIdProvier
+      // for middleware route
       injectRequestLogger = config.injectRequestLogger;
       requestIdProperty = config.requestIdProperty;
 

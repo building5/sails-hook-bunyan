@@ -53,7 +53,9 @@ specified, it will instead log to the named file. If both `filePath` and
 `bunyan.streams` are specified, the file stream is appended to the list of given
 streams.
 
-The request id source can also be customized by configuring a requestIdProvider.  For example, the heroku style (https://devcenter.heroku.com/articles/http-request-id) could be accomplished with:
+The request id source can also be customized by configuring a requestIdProvider.
+For example, the heroku style (https://devcenter.heroku.com/articles/http-request-id)
+could be accomplished with:
 
 ```js
 var uuid = require( 'uuid' );
