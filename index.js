@@ -105,6 +105,14 @@ module.exports = function(sails) {
         bunyanConfig.logUncaughtException = oldConfig.logUncaughtException;
       }
 
+      if (oldConfig.requestIdProperty) {
+        bunyanConfig.requestIdProperty = oldConfig.requestIdProperty;
+      }
+
+      if (oldConfig.requestIdProvider) {
+        bunyanConfig.requestIdProvider = oldConfig.requestIdProvider;
+      }
+
       if (oldConfig.rotationSignal) {
         bunyanConfig.rotationSignal = oldConfig.rotationSignal;
       }
