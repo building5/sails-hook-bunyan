@@ -5,6 +5,7 @@ var Sails = require('sails').Sails;
 var chai = require('chai');
 var expect = chai.expect;
 var bunyan = require('bunyan');
+var _ = require('lodash');
 
 chai.use(require('dirty-chai'));
 chai.use(require('sinon-chai'));
@@ -31,14 +32,21 @@ describe('sails-hook-bunyan', function() {
   function buildFakeLogger() {
     return {
       reopenFileStreams: sinon.stub(),
-      child: sinon.stub(),
+      child: sinon.spy(function(options) {
+
+        var newLogger = buildFakeLogger();
+        _.assign(newLogger.options, this.options, options || {});
+        return newLogger;
+      }),
 
       trace: sinon.stub(),
       debug: sinon.stub(),
       info: sinon.stub(),
       warn: sinon.stub(),
       error: sinon.stub(),
-      fatal: sinon.stub()
+      fatal: sinon.stub(),
+
+      options:{}
     };
   }
 
@@ -117,6 +125,7 @@ describe('sails-hook-bunyan', function() {
     beforeEach(function(done) {
       controller = sinon.spy(function(req, res) {
         expect(req).to.have.property('log');
+        expect(req.log.options).to.have.property('req');
         res.send(200, 'okay');
       });
 
@@ -167,6 +176,193 @@ describe('sails-hook-bunyan', function() {
       }, function(err, clientRes) {
         expect(err).to.not.exist();
         expect(fakeLogger.child).to.not.be.called();
+        expect(controller).to.be.called();
+        expect(clientRes).to.have.property('statusCode', 200);
+        return done();
+      });
+    });
+  });
+
+  describe('with default requestIdProperty and requestIdProvider', function() {
+    var controller;
+
+    beforeEach(function(done) {
+      controller = sinon.spy(function(req, res) {
+        expect(req).to.have.property('log');
+        expect(req).to.have.property('id');
+        expect(req.log.options).to.have.property('req_id');
+        res.send(200, 'okay');
+      });
+
+      liftSails({
+        bunyan: {
+          injectRequestLogger: true
+        },
+        routes: {
+          '/test': controller
+        }
+      }, done);
+    });
+
+    it('should inject a request logger with a req_id', function(done) {
+      sails.request({
+        method: 'get',
+        url: '/test'
+      }, function(err, clientRes) {
+        expect(err).to.not.exist();
+        expect(fakeLogger.child).to.be.called();
+        expect(controller).to.be.called();
+        expect(clientRes).to.have.property('statusCode', 200);
+        return done();
+      });
+    });
+  });
+
+  describe('with custom requestIdProperty', function() {
+    var controller;
+
+    beforeEach(function(done) {
+      controller = sinon.spy(function(req, res) {
+        expect(req).to.have.property('log');
+        expect(req.log.options).to.have.property('requestId');
+
+        // default should not be present
+        expect(req.log.options).to.not.have.property('req_id');
+
+        res.send(200, 'okay');
+      });
+
+      liftSails({
+        bunyan: {
+          injectRequestLogger: true,
+          requestIdProperty: 'requestId'
+        },
+        routes: {
+          '/test': controller
+        }
+      }, done);
+    });
+
+    it('should inject a request logger with a custom req_id', function(done) {
+      sails.request({
+        method: 'get',
+        url: '/test'
+      }, function(err, clientRes) {
+        expect(err).to.not.exist();
+        expect(fakeLogger.child).to.be.called();
+        expect(controller).to.be.called();
+        expect(clientRes).to.have.property('statusCode', 200);
+        return done();
+      });
+    });
+  });
+
+  describe('with a null requestIdProvider', function() {
+    var controller;
+
+    beforeEach(function(done) {
+      controller = sinon.spy(function(req, res) {
+        expect(req).to.have.property('log');
+        expect(req).to.not.have.property('id');
+        expect(req.log.options).to.not.have.property('req_id');
+        res.send(200, 'okay');
+      });
+
+      liftSails({
+        bunyan: {
+          injectRequestLogger: true,
+          requestIdProvider: null
+        },
+        routes: {
+          '/test': controller
+        }
+      }, done);
+    });
+
+    it('should inject a request logger without a req_id', function(done) {
+      sails.request({
+        method: 'get',
+        url: '/test'
+      }, function(err, clientRes) {
+        expect(err).to.not.exist();
+        expect(fakeLogger.child).to.be.called();
+        expect(controller).to.be.called();
+        expect(clientRes).to.have.property('statusCode', 200);
+        return done();
+      });
+    });
+  });
+
+  describe('with a custom requestIdProvider which returns null', function() {
+    var controller;
+
+    beforeEach(function(done) {
+      controller = sinon.spy(function(req, res) {
+        expect(req).to.have.property('log');
+        expect(req).to.not.have.property('id');
+        expect(req.log.options).to.not.have.property('req_id');
+        res.send(200, 'okay');
+      });
+
+      liftSails({
+        bunyan: {
+          injectRequestLogger: true,
+          requestIdProvider: function() { return null; }
+        },
+        routes: {
+          '/test': controller
+        }
+      }, done);
+    });
+
+    it('should inject a request logger without a req_id', function(done) {
+      sails.request({
+        method: 'get',
+        url: '/test'
+      }, function(err, clientRes) {
+        expect(err).to.not.exist();
+        expect(fakeLogger.child).to.be.called();
+        expect(controller).to.be.called();
+        expect(clientRes).to.have.property('statusCode', 200);
+        return done();
+      });
+    });
+  });
+
+  describe('with a custom requestIdProvider', function() {
+    var controller;
+
+    beforeEach(function(done) {
+      controller = sinon.spy(function(req, res) {
+        expect(req).to.have.property('log');
+        expect(req).to.not.have.property('id');
+        expect(req.log.options).to.have.property('req_id');
+
+        // jscs: disable
+        expect(req.log.options.req_id).to.equal('abc'); // jshint ignore:line
+        // jscs: enable
+
+        res.send(200, 'okay');
+      });
+
+      liftSails({
+        bunyan: {
+          injectRequestLogger: true,
+          requestIdProvider: function() { return 'abc'; }
+        },
+        routes: {
+          '/test': controller
+        }
+      }, done);
+    });
+
+    it('should inject a request logger with a req_id', function(done) {
+      sails.request({
+        method: 'get',
+        url: '/test'
+      }, function(err, clientRes) {
+        expect(err).to.not.exist();
+        expect(fakeLogger.child).to.be.called();
         expect(controller).to.be.called();
         expect(clientRes).to.have.property('statusCode', 200);
         return done();

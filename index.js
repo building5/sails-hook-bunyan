@@ -2,6 +2,7 @@
 'use strict';
 
 var bunyan = require('bunyan');
+var uuid = require('uuid');
 
 /**
  * Mapping of Sails log levels to Bunyan.
@@ -23,6 +24,8 @@ module.exports.logLevels = logLevels;
  */
 module.exports = function(sails) {
   var injectRequestLogger;
+  var requestIdProperty;
+  var requestIdProvider;
   var _this;
 
   return {
@@ -34,6 +37,29 @@ module.exports = function(sails) {
       var bunyanConfig = {
         /** If true, a child logger is injected on each request */
         injectRequestLogger: true,
+
+        /** Name of the request id property assigned to the request logger */
+        requestIdProperty: 'req_id',
+
+        /**
+         * Extension point for returning custom request ids
+         *
+         * Gets or generates a unique id for the request, and attaches it
+         * to the request logger's options. If no id is returned, then the
+         * request logger is unmodified.
+         *
+         * The default provider returns a new UUID v4 and attaches
+         * it to req.id
+         *
+         * Note: Only called if injectRequestLogger is true.
+         */
+        requestIdProvider: function(req) {
+          if (!req.id) {
+            req.id = uuid.v4();
+          }
+
+          return req.id;
+        },
 
         /** If true, log uncaughtExceptions and terminate the process */
         logUncaughtException: false,
@@ -77,6 +103,14 @@ module.exports = function(sails) {
 
       if (Object.hasOwnProperty.call(oldConfig, 'logUncaughtException')) {
         bunyanConfig.logUncaughtException = oldConfig.logUncaughtException;
+      }
+
+      if (oldConfig.requestIdProperty) {
+        bunyanConfig.requestIdProperty = oldConfig.requestIdProperty;
+      }
+
+      if (oldConfig.requestIdProvider) {
+        bunyanConfig.requestIdProvider = oldConfig.requestIdProvider;
       }
 
       if (oldConfig.rotationSignal) {
@@ -145,8 +179,13 @@ module.exports = function(sails) {
         });
       }
 
-      // save off injectRequestLogger for middleware route
-      injectRequestLogger = sails.config[this.configKey].injectRequestLogger;
+      // save off injectRequestLogger, requestIdProperty, and requestIdProvier
+      // for middleware route
+      injectRequestLogger = config.injectRequestLogger;
+      requestIdProperty = config.requestIdProperty;
+
+      requestIdProvider = config.requestIdProvider ||
+          function() {return null;};
 
       done();
     },
@@ -158,8 +197,15 @@ module.exports = function(sails) {
       before: {
         '/*': function(req, res, next) {
           if (injectRequestLogger) {
-            req = _this.reqSerializer(req);
-            req.log = _this.logger.child({req: req}, true);
+
+            var options = {req: _this.reqSerializer(req)};
+
+            var requestId = requestIdProvider(req);
+            if (requestId !== null) {
+              options[requestIdProperty] = requestId;
+            }
+
+            req.log = _this.logger.child(options, true);
           }
 
           next();
