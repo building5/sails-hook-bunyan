@@ -23,6 +23,9 @@ module.exports.bunyan = {
   /** If true, a child logger is injected on each request */
   injectRequestLogger: true,
 
+  /** Name of the request id property assigned to the request logger */
+  requestIdProperty: 'req_id',
+
   /** If true, log uncaughtExceptions and terminate the process */
   logUncaughtException: false,
 
@@ -49,6 +52,21 @@ By default, `sails-hook-bunyan` will log to `stdout`. If a `filePath` is
 specified, it will instead log to the named file. If both `filePath` and
 `bunyan.streams` are specified, the file stream is appended to the list of given
 streams.
+
+The request id source can also be customized by configuring a requestIdProvider.
+For example, the heroku style (https://devcenter.heroku.com/articles/http-request-id)
+could be accomplished with:
+
+```js
+var uuid = require( 'uuid' );
+module.exports.log = {
+
+    requestIdProvider: function( req ) {
+        req.id = req.headers['x-request-id'] || uuid.v4();
+        return req.id;
+    }
+};
+```
 
 For `rotationSignal`, it's recommended to use `SIGHUP`. `SIGUSR1` is reserved
 by Node, and will start the debugger. `SIGUSR2` is reserved by Sails, and will
