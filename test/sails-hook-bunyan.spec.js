@@ -160,7 +160,7 @@ describe('sails-hook-bunyan', function() {
       }, done);
     });
 
-    it('should inject a request logger', function(done) {
+    it('should not inject a request logger', function(done) {
       sails.request({
         method: 'get',
         url: '/test'

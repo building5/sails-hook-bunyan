@@ -83,6 +83,11 @@ module.exports = function(sails) {
         bunyanConfig.rotationSignal = oldConfig.rotationSignal;
       }
 
+      var oldInjectRequestLogger = oldConfig.injectRequestLogger;
+      if (oldInjectRequestLogger || oldInjectRequestLogger === false) {
+        bunyanConfig.injectRequestLogger = oldConfig.injectRequestLogger;
+      }
+
       return config;
     },
 
