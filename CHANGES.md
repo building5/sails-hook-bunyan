@@ -1,5 +1,10 @@
 # sails-hook-bunyan changelog
 
+## v2.1.2 (2015-07-22)
+
+ * #5 Fix `injectRequestLogger` when set to false
+ * #6 Add an Add-ons section to the README
+
 ## v2.1.1 (2015-06-12)
 
  * #1 Run the request serializer when building the child logger.
