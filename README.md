@@ -56,6 +56,12 @@ lower the sails app. Upon receiving the signal, `sails-hook-bunyan` will call
 `bunyan.reopenFileStreams()`; allowing for something like [logrotate][] to
 handle the actual file rotation logic.
 
+## Add-ons
+
+- [sails-hook-bunyan-request-logger](https://github.com/JeffAshtonCT/sails-hook-bunyan-request-logger) -
+An extension which replaces the request logger with one that includes request ids
+
+
  [sails hook]: http://sailsjs.org/#!/documentation/concepts/extending-sails/Hooks
  [sails-bunyan]: https://github.com/building5/sails-bunyan
  [hook configuration]: http://sailsjs.org/#!/documentation/concepts/extending-sails/Hooks/usinghooks.html?q=changing-the-way-sails-loads-an-installable-hook
