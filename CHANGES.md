@@ -1,5 +1,9 @@
 # sails-hook-bunyan changelog
 
+## v2.1.3 (2015-08-21)
+
+ * #8 Doc fixes
+
 ## v2.1.2 (2015-07-22)
 
  * #5 Fix `injectRequestLogger` when set to false

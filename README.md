@@ -32,10 +32,10 @@ module.exports.bunyan = {
   /** Convenience setting to log to file */
   filePath: null,
 
-  bunyan: {
+  logger: {
     /** Logger name */
     name: 'sails',
-    /** Bunyan logging level; defaults to debug */
+    /** Bunyan logging level; defaults to info */
     level: null,
     /** Bunyan serializers */
     serializers: bunyan.stdSerializers,
