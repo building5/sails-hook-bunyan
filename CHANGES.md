@@ -4,6 +4,7 @@
 
  * Updated `jscs` and `chai`. Fixed new style issues, which was mostly just
    adding a whole bunch of commas.
+ * Added [David-DM](david-dm.org) badge.
 
 ## v2.1.3 (2015-08-21)
 

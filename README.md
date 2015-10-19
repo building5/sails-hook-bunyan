@@ -1,5 +1,7 @@
 # sails-hook-bunyan
 
+![dependencies](https://david-dm.org/building5/sails-hook-bunyan.svg)
+
 A [sails hook][] replacing the Sails default logger with Bunyan. Supports sails
 0.11.x.
 
