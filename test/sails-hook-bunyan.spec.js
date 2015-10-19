@@ -17,7 +17,7 @@ describe('sails-hook-bunyan', function() {
   function liftSails(sailsConfig, done) {
     sailsConfig.hooks = {
       grunt: false,
-      bunyan: require('../')
+      bunyan: require('../'),
     };
 
     new Sails().load(sailsConfig, function(err, s) {
@@ -38,7 +38,7 @@ describe('sails-hook-bunyan', function() {
       info: sinon.stub(),
       warn: sinon.stub(),
       error: sinon.stub(),
-      fatal: sinon.stub()
+      fatal: sinon.stub(),
     };
   }
 
@@ -122,15 +122,15 @@ describe('sails-hook-bunyan', function() {
 
       liftSails({
         routes: {
-          '/test': controller
-        }
+          '/test': controller,
+        },
       }, done);
     });
 
     it('should inject a request logger', function(done) {
       sails.request({
         method: 'get',
-        url: '/test'
+        url: '/test',
       }, function(err, clientRes) {
         expect(err).to.not.exist();
         expect(fakeLogger.child).to.be.called();
@@ -152,18 +152,18 @@ describe('sails-hook-bunyan', function() {
 
       liftSails({
         bunyan: {
-          injectRequestLogger: false
+          injectRequestLogger: false,
         },
         routes: {
-          '/test': controller
-        }
+          '/test': controller,
+        },
       }, done);
     });
 
     it('should not inject a request logger', function(done) {
       sails.request({
         method: 'get',
-        url: '/test'
+        url: '/test',
       }, function(err, clientRes) {
         expect(err).to.not.exist();
         expect(fakeLogger.child).to.not.be.called();
@@ -183,7 +183,7 @@ describe('sails-hook-bunyan', function() {
       expect(bunyan.createLogger).to.be.called();
       expect(bunyan.createLogger.firstCall).to.be.calledWithExactly({
         name: 'sails',
-        serializers: bunyan.stdSerializers
+        serializers: bunyan.stdSerializers,
       });
     });
   });
@@ -193,9 +193,9 @@ describe('sails-hook-bunyan', function() {
       liftSails({
         bunyan: {
           logger: {
-            name: 'foo'
-          }
-        }
+            name: 'foo',
+          },
+        },
       }, done);
     });
 
@@ -203,7 +203,7 @@ describe('sails-hook-bunyan', function() {
       expect(bunyan.createLogger).to.be.called();
       expect(bunyan.createLogger.firstCall).to.be.calledWithExactly({
         name: 'foo',
-        serializers: bunyan.stdSerializers
+        serializers: bunyan.stdSerializers,
       });
     });
   });
@@ -213,9 +213,9 @@ describe('sails-hook-bunyan', function() {
       liftSails({
         bunyan: {
           logger: {
-            level: 'error'
-          }
-        }
+            level: 'error',
+          },
+        },
       }, done);
     });
 
@@ -224,7 +224,7 @@ describe('sails-hook-bunyan', function() {
       expect(bunyan.createLogger.firstCall).to.be.calledWithExactly({
         name: 'sails',
         level: 'error',
-        serializers: bunyan.stdSerializers
+        serializers: bunyan.stdSerializers,
       });
     });
   });
@@ -234,9 +234,9 @@ describe('sails-hook-bunyan', function() {
       liftSails({
         bunyan: {
           logger: {
-            serializers: {foo: null}
-          }
-        }
+            serializers: {foo: null},
+          },
+        },
       }, done);
     });
 
@@ -244,7 +244,7 @@ describe('sails-hook-bunyan', function() {
       expect(bunyan.createLogger).to.be.called();
       expect(bunyan.createLogger.firstCall).to.be.calledWithExactly({
         name: 'sails',
-        serializers: {foo: null}
+        serializers: {foo: null},
       });
     });
   });
@@ -254,9 +254,9 @@ describe('sails-hook-bunyan', function() {
       liftSails({
         bunyan: {
           logger: {
-            streams: [{path: 'foo'}]
-          }
-        }
+            streams: [{path: 'foo'}],
+          },
+        },
       }, done);
     });
 
@@ -265,7 +265,7 @@ describe('sails-hook-bunyan', function() {
       expect(bunyan.createLogger.firstCall).to.be.calledWithExactly({
         name: 'sails',
         serializers: bunyan.stdSerializers,
-        streams: [{path: 'foo'}]
+        streams: [{path: 'foo'}],
       });
     });
   });
@@ -274,8 +274,8 @@ describe('sails-hook-bunyan', function() {
     beforeEach(function(done) {
       liftSails({
         bunyan: {
-          rotationSignal: 'SIGHUP'
-        }
+          rotationSignal: 'SIGHUP',
+        },
       }, done);
     });
 
@@ -301,8 +301,8 @@ describe('sails-hook-bunyan', function() {
       mochaUncaughtHandler = process.listeners('uncaughtException').pop();
       liftSails({
         bunyan: {
-          logUncaughtException: true
-        }
+          logUncaughtException: true,
+        },
       }, done);
 
       sinon.stub(process, 'exit')
@@ -336,8 +336,8 @@ describe('sails-hook-bunyan', function() {
         bunyan: {
           getLogger: function() {
             return customFakeLogger;
-          }
-        }
+          },
+        },
       }, done);
     });
 
@@ -356,8 +356,8 @@ describe('sails-hook-bunyan', function() {
       beforeEach(function(done) {
         liftSails({
           log: {
-            level: 'error'
-          }
+            level: 'error',
+          },
         }, done);
       });
 
@@ -370,8 +370,8 @@ describe('sails-hook-bunyan', function() {
       beforeEach(function(done) {
         liftSails({
           log: {
-            filePath: 'some.log'
-          }
+            filePath: 'some.log',
+          },
         }, done);
       });
 
@@ -386,8 +386,8 @@ describe('sails-hook-bunyan', function() {
         liftSails({
           log: {
             level: 'error',
-            filePath: 'some.log'
-          }
+            filePath: 'some.log',
+          },
         }, done);
       });
 
@@ -401,8 +401,8 @@ describe('sails-hook-bunyan', function() {
       beforeEach(function(done) {
         liftSails({
           log: {
-            logUncaughtException: true
-          }
+            logUncaughtException: true,
+          },
         }, done);
       });
 
@@ -416,8 +416,8 @@ describe('sails-hook-bunyan', function() {
       beforeEach(function(done) {
         liftSails({
           log: {
-            rotationSignal: 'SIGHUP'
-          }
+            rotationSignal: 'SIGHUP',
+          },
         }, done);
       });
 
@@ -433,9 +433,9 @@ describe('sails-hook-bunyan', function() {
           log: {
             bunyan: {
               name: 'some-name',
-              serializers: {foo: null}
-            }
-          }
+              serializers: {foo: null},
+            },
+          },
         }, done);
       });
 
@@ -443,7 +443,7 @@ describe('sails-hook-bunyan', function() {
         expect(sails.config.bunyan).to.have.property('logger')
           .that.deep.equals({
             name: 'some-name',
-            serializers: {foo: null}
+            serializers: {foo: null},
           });
       });
     });

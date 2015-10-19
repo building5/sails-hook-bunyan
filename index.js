@@ -14,7 +14,7 @@ var logLevels = {
   warn: 'warn',
   error: 'error',
   crit: 'fatal',
-  log: 'debug' // default log is at the debug level
+  log: 'debug', // default log is at the debug level
 };
 module.exports.logLevels = logLevels;
 
@@ -50,7 +50,7 @@ module.exports = function(sails) {
         logger: {
           // I would put a default config here; but Sails doesn't merge
           // these config objects
-        }
+        },
       };
       config[this.configKey] = bunyanConfig;
 
@@ -65,7 +65,7 @@ module.exports = function(sails) {
       if (oldConfig.filePath) {
         bunyanConfig.logger.streams = bunyanConfig.logger.streams || [];
         fileStream = {
-          path: oldConfig.filePath
+          path: oldConfig.filePath,
         };
 
         if (bunyanConfig.logger.level) {
@@ -168,8 +168,8 @@ module.exports = function(sails) {
           }
 
           next();
-        }
-      }
-    }
+        },
+      },
+    },
   };
 };

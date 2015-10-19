@@ -1,5 +1,10 @@
 # sails-hook-bunyan changelog
 
+## vNEXT (XXXX-XX-XX)
+
+ * Updated `jscs` and `chai`. Fixed new style issues, which was mostly just
+   adding a whole bunch of commas.
+
 ## v2.1.3 (2015-08-21)
 
  * #8 Doc fixes
