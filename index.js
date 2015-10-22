@@ -112,19 +112,6 @@ module.exports = function(sails) {
         function(x) { return x; };
 
       this.logger = bunyan.createLogger(config.logger);
-
-      // Inject custom log config
-      sails.config.log.custom = {};
-
-      Object.keys(logLevels).forEach(function(sailsLevel) {
-        var bunyanLevel = logLevels[sailsLevel];
-        if (bunyanLevel) {
-          sails.config.log.custom[sailsLevel] = function() {
-            var logger = config.getLogger();
-            logger[bunyanLevel].apply(logger, arguments);
-          };
-        }
-      });
     },
 
     /**
@@ -152,6 +139,22 @@ module.exports = function(sails) {
 
       // save off injectRequestLogger for middleware route
       injectRequestLogger = sails.config[this.configKey].injectRequestLogger;
+
+      // Inject log methods
+      var log = sails.log = this.logger.debug.bind(this.logger);
+
+      Object.keys(logLevels).forEach(function(sailsLevel) {
+        var bunyanLevel = logLevels[sailsLevel];
+        if (bunyanLevel) {
+          log[sailsLevel] = function() {
+            var logger = config.getLogger();
+            logger[bunyanLevel].apply(logger, arguments);
+          };
+        } else {
+          // no-op
+          log[sailsLevel] = function() {};
+        }
+      });
 
       done();
     },

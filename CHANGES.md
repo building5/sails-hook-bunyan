@@ -1,10 +1,11 @@
 # sails-hook-bunyan changelog
 
-## vNEXT (XXXX-XX-XX)
+## v2.1.4 (2015-10-22)
 
  * Updated `jscs` and `chai`. Fixed new style issues, which was mostly just
    adding a whole bunch of commas.
  * Added [David-DM](david-dm.org) badge.
+ * #10 Properly handle objects in log messages
 
 ## v2.1.3 (2015-08-21)
 
