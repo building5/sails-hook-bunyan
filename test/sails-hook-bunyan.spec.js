@@ -9,7 +9,7 @@ var bunyan = require('bunyan');
 chai.use(require('dirty-chai'));
 chai.use(require('sinon-chai'));
 
-describe('sails-hook-bunyan', function() {
+describe('sails-hook-bunyan', function () {
   var fakeLogger;
   var sails;
   var sinon;
@@ -20,7 +20,7 @@ describe('sails-hook-bunyan', function() {
       bunyan: require('../'),
     };
 
-    new Sails().load(sailsConfig, function(err, s) {
+    new Sails().load(sailsConfig, function (err, s) {
       expect(err).to.not.exist();
       expect(s).to.exist();
       sails = s;
@@ -42,30 +42,30 @@ describe('sails-hook-bunyan', function() {
     };
   }
 
-  before(function() {
+  before(function () {
     // Lifting sails listens to a bunch of stuff
     process.setMaxListeners(0);
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     sinon = require('sinon').sandbox.create();
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     fakeLogger = buildFakeLogger();
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     sinon.stub(bunyan, 'createLogger')
       .returns(fakeLogger);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sinon.restore();
     sinon = null;
   });
 
-  afterEach(function(done) {
+  afterEach(function (done) {
     if (sails) {
       return sails.lower(done);
     }
@@ -73,28 +73,28 @@ describe('sails-hook-bunyan', function() {
     done();
   });
 
-  describe('for any config', function() {
-    beforeEach(function(done) {
+  describe('for any config', function () {
+    beforeEach(function (done) {
       liftSails({}, done);
     });
 
-    it('should build a logger', function() {
+    it('should build a logger', function () {
       expect(bunyan.createLogger).to.be.called();
     });
 
-    it('should disable ship ascii art', function() {
+    it('should disable ship ascii art', function () {
       expect(sails.config.log).to.have.property('noShip', true);
     });
 
-    it('should disable log colors', function() {
+    it('should disable log colors', function () {
       expect(sails.config.log).to.have.property('colors', false);
     });
 
-    it('should expose the root bunyan logger', function() {
+    it('should expose the root bunyan logger', function () {
       expect(sails.hooks.bunyan).to.have.property('logger');
     });
 
-    it('should log sails.log.crit as fatal', function() {
+    it('should log sails.log.crit as fatal', function () {
       sails.log.crit('some message');
       expect(fakeLogger.fatal)
         .to.have.been.called();
@@ -102,7 +102,7 @@ describe('sails-hook-bunyan', function() {
         .to.have.been.calledWithExactly('some message');
     });
 
-    it('should log default as debug', function() {
+    it('should log default as debug', function () {
       sails.log('some other message');
       expect(fakeLogger.debug)
         .to.have.been.called();
@@ -111,11 +111,11 @@ describe('sails-hook-bunyan', function() {
     });
   });
 
-  describe('with routes configured', function() {
+  describe('with routes configured', function () {
     var controller;
 
-    beforeEach(function(done) {
-      controller = sinon.spy(function(req, res) {
+    beforeEach(function (done) {
+      controller = sinon.spy(function (req, res) {
         expect(req).to.have.property('log');
         res.send(200, 'okay');
       });
@@ -127,11 +127,11 @@ describe('sails-hook-bunyan', function() {
       }, done);
     });
 
-    it('should inject a request logger', function(done) {
+    it('should inject a request logger', function (done) {
       sails.request({
         method: 'get',
         url: '/test',
-      }, function(err, clientRes) {
+      }, function (err, clientRes) {
         expect(err).to.not.exist();
         expect(fakeLogger.child).to.be.called();
         expect(controller).to.be.called();
@@ -141,11 +141,11 @@ describe('sails-hook-bunyan', function() {
     });
   });
 
-  describe('with request logger disabled', function() {
+  describe('with request logger disabled', function () {
     var controller;
 
-    beforeEach(function(done) {
-      controller = sinon.spy(function(req, res) {
+    beforeEach(function (done) {
+      controller = sinon.spy(function (req, res) {
         expect(req).to.not.have.property('log');
         res.send(200, 'okay');
       });
@@ -160,11 +160,11 @@ describe('sails-hook-bunyan', function() {
       }, done);
     });
 
-    it('should not inject a request logger', function(done) {
+    it('should not inject a request logger', function (done) {
       sails.request({
         method: 'get',
         url: '/test',
-      }, function(err, clientRes) {
+      }, function (err, clientRes) {
         expect(err).to.not.exist();
         expect(fakeLogger.child).to.not.be.called();
         expect(controller).to.be.called();
@@ -174,12 +174,12 @@ describe('sails-hook-bunyan', function() {
     });
   });
 
-  describe('with no config', function() {
-    beforeEach(function(done) {
+  describe('with no config', function () {
+    beforeEach(function (done) {
       liftSails({}, done);
     });
 
-    it('should build with default config', function() {
+    it('should build with default config', function () {
       expect(bunyan.createLogger).to.be.called();
       expect(bunyan.createLogger.firstCall).to.be.calledWithExactly({
         name: 'sails',
@@ -188,8 +188,8 @@ describe('sails-hook-bunyan', function() {
     });
   });
 
-  describe('with a configured name', function() {
-    beforeEach(function(done) {
+  describe('with a configured name', function () {
+    beforeEach(function (done) {
       liftSails({
         bunyan: {
           logger: {
@@ -199,7 +199,7 @@ describe('sails-hook-bunyan', function() {
       }, done);
     });
 
-    it('should build with default config, and the given name', function() {
+    it('should build with default config, and the given name', function () {
       expect(bunyan.createLogger).to.be.called();
       expect(bunyan.createLogger.firstCall).to.be.calledWithExactly({
         name: 'foo',
@@ -208,8 +208,8 @@ describe('sails-hook-bunyan', function() {
     });
   });
 
-  describe('with a configured level', function() {
-    beforeEach(function(done) {
+  describe('with a configured level', function () {
+    beforeEach(function (done) {
       liftSails({
         bunyan: {
           logger: {
@@ -219,7 +219,7 @@ describe('sails-hook-bunyan', function() {
       }, done);
     });
 
-    it('should build with default config, and the given name', function() {
+    it('should build with default config, and the given name', function () {
       expect(bunyan.createLogger).to.be.called();
       expect(bunyan.createLogger.firstCall).to.be.calledWithExactly({
         name: 'sails',
@@ -229,49 +229,49 @@ describe('sails-hook-bunyan', function() {
     });
   });
 
-  describe('with a configured serializers', function() {
-    beforeEach(function(done) {
+  describe('with a configured serializers', function () {
+    beforeEach(function (done) {
       liftSails({
         bunyan: {
           logger: {
-            serializers: {foo: null},
+            serializers: { foo: null },
           },
         },
       }, done);
     });
 
-    it('should build with default config, and the given name', function() {
+    it('should build with default config, and the given name', function () {
       expect(bunyan.createLogger).to.be.called();
       expect(bunyan.createLogger.firstCall).to.be.calledWithExactly({
         name: 'sails',
-        serializers: {foo: null},
+        serializers: { foo: null },
       });
     });
   });
 
-  describe('with a configured stream', function() {
-    beforeEach(function(done) {
+  describe('with a configured stream', function () {
+    beforeEach(function (done) {
       liftSails({
         bunyan: {
           logger: {
-            streams: [{path: 'foo'}],
+            streams: [{ path: 'foo' }],
           },
         },
       }, done);
     });
 
-    it('should build with default config, and the given stream', function() {
+    it('should build with default config, and the given stream', function () {
       expect(bunyan.createLogger).to.be.called();
       expect(bunyan.createLogger.firstCall).to.be.calledWithExactly({
         name: 'sails',
         serializers: bunyan.stdSerializers,
-        streams: [{path: 'foo'}],
+        streams: [{ path: 'foo' }],
       });
     });
   });
 
-  describe('with rotationSignal configured', function() {
-    beforeEach(function(done) {
+  describe('with rotationSignal configured', function () {
+    beforeEach(function (done) {
       liftSails({
         bunyan: {
           rotationSignal: 'SIGHUP',
@@ -279,7 +279,7 @@ describe('sails-hook-bunyan', function() {
       }, done);
     });
 
-    it('should reopen streams when signaled', function(done) {
+    it('should reopen streams when signaled', function (done) {
       expect(fakeLogger.reopenFileStreams).to.not.be.called();
       process.kill(process.pid, 'SIGHUP');
       function waitForReopenFileStreamsToBeCalled() {
@@ -294,10 +294,10 @@ describe('sails-hook-bunyan', function() {
     });
   });
 
-  describe('with logUncaughtException configured', function() {
+  describe('with logUncaughtException configured', function () {
     var mochaUncaughtHandler;
 
-    beforeEach(function(done) {
+    beforeEach(function (done) {
       mochaUncaughtHandler = process.listeners('uncaughtException').pop();
       liftSails({
         bunyan: {
@@ -310,14 +310,14 @@ describe('sails-hook-bunyan', function() {
 
     });
 
-    it('should log uncaught exceptions and exit', function(done) {
+    it('should log uncaught exceptions and exit', function (done) {
       expect(sails.hooks.bunyan.logger.fatal).to.not.be.called();
       expect(process.exit).to.not.be.called();
 
       // Remove the mocha handler, since it would fail the test
       process.removeListener('uncaughtException', mochaUncaughtHandler);
       process.emit('uncaughtException', new Error('not an error'));
-      setImmediate(function() {
+      setImmediate(function () {
         // put the mocha handler back, so it can fail the test
         process.on('uncaughtException', mochaUncaughtHandler);
 
@@ -328,20 +328,20 @@ describe('sails-hook-bunyan', function() {
     });
   });
 
-  describe('with custom getLogger', function() {
+  describe('with custom getLogger', function () {
     var customFakeLogger;
-    beforeEach(function(done) {
+    beforeEach(function (done) {
       customFakeLogger = buildFakeLogger();
       liftSails({
         bunyan: {
-          getLogger: function() {
+          getLogger: function () {
             return customFakeLogger;
           },
         },
       }, done);
     });
 
-    it('should use the custom logger', function() {
+    it('should use the custom logger', function () {
       sails.log.debug('some message');
       expect(customFakeLogger.debug)
         .to.have.been.called();
@@ -351,9 +351,9 @@ describe('sails-hook-bunyan', function() {
 
   });
 
-  describe('with old sails.log config', function() {
-    describe('configuring level', function() {
-      beforeEach(function(done) {
+  describe('with old sails.log config', function () {
+    describe('configuring level', function () {
+      beforeEach(function (done) {
         liftSails({
           log: {
             level: 'error',
@@ -361,13 +361,13 @@ describe('sails-hook-bunyan', function() {
         }, done);
       });
 
-      it('should be used for sails.bunyan.logger.level', function() {
+      it('should be used for sails.bunyan.logger.level', function () {
         expect(sails.config.bunyan.logger).to.have.property('level', 'error');
       });
     });
 
-    describe('configuring filePath', function() {
-      beforeEach(function(done) {
+    describe('configuring filePath', function () {
+      beforeEach(function (done) {
         liftSails({
           log: {
             filePath: 'some.log',
@@ -375,14 +375,14 @@ describe('sails-hook-bunyan', function() {
         }, done);
       });
 
-      it('should add a stream to sails.bunyan.logger.streams', function() {
+      it('should add a stream to sails.bunyan.logger.streams', function () {
         expect(sails.config.bunyan.logger).to.have.property('streams')
-          .that.deep.equals([{path: 'some.log'}]);
+          .that.deep.equals([{ path: 'some.log' }]);
       });
     });
 
-    describe('configuring filePath and level', function() {
-      beforeEach(function(done) {
+    describe('configuring filePath and level', function () {
+      beforeEach(function (done) {
         liftSails({
           log: {
             level: 'error',
@@ -391,14 +391,14 @@ describe('sails-hook-bunyan', function() {
         }, done);
       });
 
-      it('should add a stream to sails.bunyan.logger.streams', function() {
+      it('should add a stream to sails.bunyan.logger.streams', function () {
         expect(sails.config.bunyan.logger).to.have.property('streams')
-          .that.deep.equals([{path: 'some.log', level: 'error'}]);
+          .that.deep.equals([{ path: 'some.log', level: 'error' }]);
       });
     });
 
-    describe('configuring logUncaughtException', function() {
-      beforeEach(function(done) {
+    describe('configuring logUncaughtException', function () {
+      beforeEach(function (done) {
         liftSails({
           log: {
             logUncaughtException: true,
@@ -406,14 +406,14 @@ describe('sails-hook-bunyan', function() {
         }, done);
       });
 
-      it('should set that on sails.bunyan.logUncaughtException', function() {
+      it('should set that on sails.bunyan.logUncaughtException', function () {
         expect(sails.config.bunyan).to.have
           .property('logUncaughtException', true);
       });
     });
 
-    describe('configuring rotationSignal', function() {
-      beforeEach(function(done) {
+    describe('configuring rotationSignal', function () {
+      beforeEach(function (done) {
         liftSails({
           log: {
             rotationSignal: 'SIGHUP',
@@ -421,29 +421,29 @@ describe('sails-hook-bunyan', function() {
         }, done);
       });
 
-      it('should set that on sails.bunyan.rotationSignal', function() {
+      it('should set that on sails.bunyan.rotationSignal', function () {
         expect(sails.config.bunyan).to.have
           .property('rotationSignal', 'SIGHUP');
       });
     });
 
-    describe('configuring bunyan', function() {
-      beforeEach(function(done) {
+    describe('configuring bunyan', function () {
+      beforeEach(function (done) {
         liftSails({
           log: {
             bunyan: {
               name: 'some-name',
-              serializers: {foo: null},
+              serializers: { foo: null },
             },
           },
         }, done);
       });
 
-      it('should set that on sails.bunyan.logger', function() {
+      it('should set that on sails.bunyan.logger', function () {
         expect(sails.config.bunyan).to.have.property('logger')
           .that.deep.equals({
             name: 'some-name',
-            serializers: {foo: null},
+            serializers: { foo: null },
           });
       });
     });

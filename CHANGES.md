@@ -3,6 +3,7 @@
 ## v2.2.0 (2017-01-17)
 
  * Updated sails peerdep to include 0.12
+ * Fixed some jscs errors
 
 ## v2.1.4 (2015-10-22)
 

@@ -21,12 +21,12 @@ module.exports.logLevels = logLevels;
 /**
  * Sails.js hook function.
  */
-module.exports = function(sails) {
+module.exports = function (sails) {
   var injectRequestLogger;
   var _this;
 
   return {
-    defaults: function() {
+    defaults: function () {
       var _this = this;
       var fileStream;
       var config = {};
@@ -42,7 +42,7 @@ module.exports = function(sails) {
         rotationSignal: null,
 
         /** Extension point for returning custom loggers */
-        getLogger: function() {
+        getLogger: function () {
           return _this.logger;
         },
 
@@ -94,7 +94,7 @@ module.exports = function(sails) {
     /**
      * Hook configuration function.
      */
-    configure: function() {
+    configure: function () {
       var config = sails.config[this.configKey];
 
       // the ship drawing looks pretty silly in JSON
@@ -109,7 +109,7 @@ module.exports = function(sails) {
         config.logger.serializers || bunyan.stdSerializers;
 
       this.reqSerializer = config.logger.serializers.req ||
-        function(x) { return x; };
+        function (x) { return x; };
 
       this.logger = bunyan.createLogger(config.logger);
     },
@@ -117,22 +117,22 @@ module.exports = function(sails) {
     /**
      * Hook initialization function.
      */
-    initialize: function(done) {
+    initialize: function (done) {
       var config = sails.config[this.configKey];
 
       _this = this;
 
       // If a rotationSignal is given, listen for it
       if (config.rotationSignal) {
-        process.on(config.rotationSignal, function() {
+        process.on(config.rotationSignal, function () {
           _this.logger.reopenFileStreams();
         });
       }
 
       // If logUncaughtException is set, log those, too
       if (config.logUncaughtException) {
-        process.on('uncaughtException', function(err) {
-          _this.logger.fatal({err: err}, 'Uncaught exception');
+        process.on('uncaughtException', function (err) {
+          _this.logger.fatal({ err: err }, 'Uncaught exception');
           process.exit(1);
         });
       }
@@ -143,16 +143,16 @@ module.exports = function(sails) {
       // Inject log methods
       var log = sails.log = this.logger.debug.bind(this.logger);
 
-      Object.keys(logLevels).forEach(function(sailsLevel) {
+      Object.keys(logLevels).forEach(function (sailsLevel) {
         var bunyanLevel = logLevels[sailsLevel];
         if (bunyanLevel) {
-          log[sailsLevel] = function() {
+          log[sailsLevel] = function () {
             var logger = config.getLogger();
             logger[bunyanLevel].apply(logger, arguments);
           };
         } else {
           // no-op
-          log[sailsLevel] = function() {};
+          log[sailsLevel] = function () {};
         }
       });
 
@@ -164,10 +164,10 @@ module.exports = function(sails) {
      */
     routes: {
       before: {
-        '/*': function(req, res, next) {
+        '/*': function (req, res, next) {
           if (injectRequestLogger) {
             req = _this.reqSerializer(req);
-            req.log = _this.logger.child({req: req}, true);
+            req.log = _this.logger.child({ req: req }, true);
           }
 
           next();
