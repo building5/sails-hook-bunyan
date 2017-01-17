@@ -4,6 +4,7 @@
 
  * Updated sails peerdep to include 0.12
  * Fixed some jscs errors
+ * Updated mocha to 3.2.0 and jscs to 3.0.7
 
 ## v2.1.4 (2015-10-22)
 
