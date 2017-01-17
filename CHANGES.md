@@ -1,5 +1,9 @@
 # sails-hook-bunyan changelog
 
+## v2.2.0 (2017-01-17)
+
+ * Updated sails peerdep to include 0.12
+
 ## v2.1.4 (2015-10-22)
 
  * Updated `jscs` and `chai`. Fixed new style issues, which was mostly just
