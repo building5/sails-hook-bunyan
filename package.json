@@ -1,6 +1,5 @@
 {
   "name": "@brightproductions/sails-hook-bunyan",
-  "publishConfig": {"access": "public"},
   "version": "2.3.0",
   "description": "Bunyan integration for sails.js",
   "main": "index.js",
@@ -47,5 +46,8 @@
   },
   "directories": {
     "test": "test"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
