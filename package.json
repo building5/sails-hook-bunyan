@@ -1,5 +1,5 @@
 {
-  "name": "sails-hook-bunyan",
+  "name": "@brightproductions/sails-hook-bunyan",
   "version": "2.3.0",
   "description": "Bunyan integration for sails.js",
   "main": "index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/building5/sails-hook-bunyan.git"
+    "url": "git+https://github.com/building5/sails-hook-bunyan.git"
   },
   "keywords": [
     "sails",
@@ -42,5 +42,8 @@
   },
   "sails": {
     "isHook": true
+  },
+  "directories": {
+    "test": "test"
   }
 }
