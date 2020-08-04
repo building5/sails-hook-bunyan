@@ -21,9 +21,9 @@
   "author": "David M. Lee, II",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/building5/sails-hook-bunyan/issues"
+    "url": "https://github.com/markwbrown/sails-hook-bunyan/issues"
   },
-  "homepage": "https://github.com/building5/sails-hook-bunyan",
+  "homepage": "https://github.com/markwbrown/sails-hook-bunyan",
   "dependencies": {
     "bunyan": "^1.0.0",
     "sails-hook-bunyan": "^2.2.0"
