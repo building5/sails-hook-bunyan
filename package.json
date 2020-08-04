@@ -1,5 +1,6 @@
 {
   "name": "@brightproductions/sails-hook-bunyan",
+  "publishConfig": {"access": "public"},
   "version": "2.3.0",
   "description": "Bunyan integration for sails.js",
   "main": "index.js",
@@ -18,7 +19,7 @@
     "bunyan",
     "logging"
   ],
-  "author": "David M. Lee, II",
+  "author": "Mark Brown",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/markwbrown/sails-hook-bunyan/issues"
