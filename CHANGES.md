@@ -1,5 +1,10 @@
 # sails-hook-bunyan changelog
 
+ ## v2.3.0 (2020-08-05)
+
+ * Updated `config` to `bunyanConfigObject` as `config` is reserved in sails @^0.12
+ * Updated linting rules to something more sensible as nobody uses a vt100 with only 80 characters
+
 ## v2.2.0 (2017-01-17)
 
  * Updated sails peerdep to include 0.12

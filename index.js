@@ -29,7 +29,7 @@ module.exports = function (sails) {
     defaults: function () {
       var _this = this;
       var fileStream;
-      var config = {};
+      var bunyanConfigObject = {};
       var oldConfig = sails.config.log;
       var bunyanConfig = {
         /** If true, a child logger is injected on each request */
@@ -52,7 +52,7 @@ module.exports = function (sails) {
           // these config objects
         },
       };
-      config[this.configKey] = bunyanConfig;
+      bunyanConfigObject[this.configKey] = bunyanConfig;
 
       if (oldConfig.bunyan) {
         bunyanConfig.logger = oldConfig.bunyan;
@@ -88,14 +88,14 @@ module.exports = function (sails) {
         bunyanConfig.injectRequestLogger = oldConfig.injectRequestLogger;
       }
 
-      return config;
+      return bunyanConfigObject;
     },
 
     /**
      * Hook configuration function.
      */
     configure: function () {
-      var config = sails.config[this.configKey];
+      var bunyanConfigObject = sails.config[this.configKey];
 
       // the ship drawing looks pretty silly in JSON
       sails.config.log.noShip = true;
@@ -104,33 +104,33 @@ module.exports = function (sails) {
       sails.config.log.colors = false;
 
       // setup some defaults
-      config.logger.name = config.logger.name || 'sails';
-      config.logger.serializers =
-        config.logger.serializers || bunyan.stdSerializers;
+      bunyanConfigObject.logger.name = bunyanConfigObject.logger.name || 'sails';
+      bunyanConfigObject.logger.serializers =
+          bunyanConfigObject.logger.serializers || bunyan.stdSerializers;
 
-      this.reqSerializer = config.logger.serializers.req ||
-        function (x) { return x; };
+      this.reqSerializer = bunyanConfigObject.logger.serializers.req ||
+          function (x) { return x; };
 
-      this.logger = bunyan.createLogger(config.logger);
+      this.logger = bunyan.createLogger(bunyanConfigObject.logger);
     },
 
     /**
      * Hook initialization function.
      */
     initialize: function (done) {
-      var config = sails.config[this.configKey];
+      var bunyanConfigObject = sails.config[this.configKey];
 
       _this = this;
 
       // If a rotationSignal is given, listen for it
-      if (config.rotationSignal) {
-        process.on(config.rotationSignal, function () {
+      if (bunyanConfigObject.rotationSignal) {
+        process.on(bunyanConfigObject.rotationSignal, function () {
           _this.logger.reopenFileStreams();
         });
       }
 
       // If logUncaughtException is set, log those, too
-      if (config.logUncaughtException) {
+      if (bunyanConfigObject.logUncaughtException) {
         process.on('uncaughtException', function (err) {
           _this.logger.fatal({ err: err }, 'Uncaught exception');
           process.exit(1);
@@ -147,7 +147,7 @@ module.exports = function (sails) {
         var bunyanLevel = logLevels[sailsLevel];
         if (bunyanLevel) {
           log[sailsLevel] = function () {
-            var logger = config.getLogger();
+            var logger = bunyanConfigObject.getLogger();
             logger[bunyanLevel].apply(logger, arguments);
           };
         } else {
